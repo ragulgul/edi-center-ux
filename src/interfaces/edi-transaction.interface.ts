@@ -22,3 +22,8 @@ export interface EdiFilters {
   status: string;
   documentType: string;
 }
+
+export interface SortConfig {
+  column: string;
+  direction: 'asc' | 'desc';
+}

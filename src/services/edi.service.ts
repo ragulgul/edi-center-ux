@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
-import { EdiTransaction, EdiFilters } from '../interfaces/edi-transaction.interface';
+import { EdiTransaction, EdiFilters, SortConfig } from '../interfaces/edi-transaction.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -94,10 +94,16 @@ export class EdiService {
     documentType: ''
   });
 
-  getTransactions(filters: EdiFilters): Observable<EdiTransaction[]> {
+  getTransactions(filters: EdiFilters, sortConfig?: SortConfig): Observable<EdiTransaction[]> {
     return of(this.mockTransactions).pipe(
       delay(300),
-      map(transactions => this.filterTransactions(transactions, filters))
+      map(transactions => {
+        let filtered = this.filterTransactions(transactions, filters);
+        if (sortConfig) {
+          filtered = this.sortTransactions(filtered, sortConfig);
+        }
+        return filtered;
+      })
     );
   }
 
@@ -144,6 +150,66 @@ export class EdiService {
 
       return matchesSearch && matchesTradingPartner && matchesStatus && 
              matchesDocumentType && matchesFromDate && matchesToDate;
+    });
+  }
+
+  private sortTransactions(transactions: EdiTransaction[], sortConfig: SortConfig): EdiTransaction[] {
+    return [...transactions].sort((a, b) => {
+      let aValue: any;
+      let bValue: any;
+
+      switch (sortConfig.column) {
+        case 'documentType':
+          aValue = a.documentType;
+          bValue = b.documentType;
+          break;
+        case 'owner':
+          aValue = a.owner;
+          bValue = b.owner;
+          break;
+        case 'tradingPartner':
+          aValue = a.tradingPartner;
+          bValue = b.tradingPartner;
+          break;
+        case 'ediIsaId':
+          aValue = a.ediIsaId;
+          bValue = b.ediIsaId;
+          break;
+        case 'gsaId':
+          aValue = a.gsaId;
+          bValue = b.gsaId;
+          break;
+        case 'customerReferenceNumber':
+          aValue = a.customerReferenceNumber;
+          bValue = b.customerReferenceNumber;
+          break;
+        case 'dateSentReceive':
+          aValue = a.dateSentReceive.getTime();
+          bValue = b.dateSentReceive.getTime();
+          break;
+        case 'time':
+          aValue = a.time;
+          bValue = b.time;
+          break;
+        case 'status':
+          aValue = a.status;
+          bValue = b.status;
+          break;
+        case 'acknowledgement':
+          aValue = a.acknowledgement;
+          bValue = b.acknowledgement;
+          break;
+        default:
+          return 0;
+      }
+
+      if (aValue < bValue) {
+        return sortConfig.direction === 'asc' ? -1 : 1;
+      }
+      if (aValue > bValue) {
+        return sortConfig.direction === 'asc' ? 1 : -1;
+      }
+      return 0;
     });
   }
 }

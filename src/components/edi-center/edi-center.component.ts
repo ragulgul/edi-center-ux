@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { EdiService } from '../../services/edi.service';
-import { EdiTransaction, EdiFilters } from '../../interfaces/edi-transaction.interface';
+import { EdiTransaction, EdiFilters, SortConfig } from '../../interfaces/edi-transaction.interface';
 import { EdiFiltersComponent } from '../edi-filters/edi-filters.component';
 import { EdiTableComponent } from '../edi-table/edi-table.component';
 import { X12ViewerComponent } from '../x12-viewer/x12-viewer.component';
@@ -39,6 +39,7 @@ import { X12ViewerComponent } from '../x12-viewer/x12-viewer.component';
         <app-edi-table 
           [transactions]="filteredTransactions"
           [loading]="loading"
+          (sortChange)="onSortChange($event)"
           (viewX12)="onViewX12($event)"
           (viewOrder)="onViewOrder($event)"
           (resendTransaction)="onResendTransaction($event)"
@@ -134,6 +135,7 @@ export class EdiCenterComponent implements OnInit, OnDestroy {
   filteredTransactions: EdiTransaction[] = [];
   loading: boolean = false;
   selectedTransaction: EdiTransaction | null = null;
+  currentSort: SortConfig = { column: 'dateSentReceive', direction: 'desc' };
   
   private destroy$ = new Subject<void>();
 
@@ -147,7 +149,7 @@ export class EdiCenterComponent implements OnInit, OnDestroy {
       tradingPartner: '',
       status: '',
       documentType: ''
-    });
+    }, this.currentSort);
   }
 
   ngOnDestroy() {
@@ -156,12 +158,24 @@ export class EdiCenterComponent implements OnInit, OnDestroy {
   }
 
   onFiltersChange(filters: EdiFilters) {
-    this.loadTransactions(filters);
+    this.loadTransactions(filters, this.currentSort);
   }
 
-  private loadTransactions(filters: EdiFilters) {
+  onSortChange(sortConfig: SortConfig) {
+    this.currentSort = sortConfig;
+    this.loadTransactions({
+      searchText: '',
+      fromDate: '',
+      toDate: '',
+      tradingPartner: '',
+      status: '',
+      documentType: ''
+    }, this.currentSort);
+  }
+
+  private loadTransactions(filters: EdiFilters, sortConfig?: SortConfig) {
     this.loading = true;
-    this.ediService.getTransactions(filters)
+    this.ediService.getTransactions(filters, sortConfig)
       .pipe(takeUntil(this.destroy$))
       .subscribe(transactions => {
         this.filteredTransactions = transactions;
@@ -200,14 +214,14 @@ export class EdiCenterComponent implements OnInit, OnDestroy {
           if (success) {
             console.log('Transaction reloaded successfully');
             // Show success message and refresh data
-            this.onFiltersChange({
+            this.loadTransactions({
               searchText: '',
               fromDate: '',
               toDate: '',
               tradingPartner: '',
               status: '',
               documentType: ''
-            });
+            }, this.currentSort);
           }
         });
     }

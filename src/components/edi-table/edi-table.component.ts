@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EdiTransaction } from '../../interfaces/edi-transaction.interface';
+import { EdiTransaction, SortConfig } from '../../interfaces/edi-transaction.interface';
 
 @Component({
   selector: 'app-edi-table',
@@ -12,15 +12,78 @@ import { EdiTransaction } from '../../interfaces/edi-transaction.interface';
         <table class="edi-table">
           <thead>
             <tr>
-              <th>Document Type</th>
-              <th>Owner</th>
-              <th>Trading Partner</th>
-              <th>EDI/ISA ID</th>
-              <th>GSA ID</th>
-              <th>Customer Reference</th>
-              <th>Date Sent/Receive</th>
-              <th>Time</th>
-              <th>Status</th>
+              <th class="sortable" (click)="onSort('documentType')">
+                Document Type
+                <span class="sort-indicator" [ngClass]="getSortClass('documentType')">
+                  <svg viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
+                  </svg>
+                </span>
+              </th>
+              <th class="sortable" (click)="onSort('owner')">
+                Owner
+                <span class="sort-indicator" [ngClass]="getSortClass('owner')">
+                  <svg viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
+                  </svg>
+                </span>
+              </th>
+              <th class="sortable" (click)="onSort('tradingPartner')">
+                Trading Partner
+                <span class="sort-indicator" [ngClass]="getSortClass('tradingPartner')">
+                  <svg viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
+                  </svg>
+                </span>
+              </th>
+              <th class="sortable" (click)="onSort('ediIsaId')">
+                EDI/ISA ID
+                <span class="sort-indicator" [ngClass]="getSortClass('ediIsaId')">
+                  <svg viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
+                  </svg>
+                </span>
+              </th>
+              <th class="sortable" (click)="onSort('gsaId')">
+                GSA ID
+                <span class="sort-indicator" [ngClass]="getSortClass('gsaId')">
+                  <svg viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
+                  </svg>
+                </span>
+              </th>
+              <th class="sortable" (click)="onSort('customerReferenceNumber')">
+                Customer Reference
+                <span class="sort-indicator" [ngClass]="getSortClass('customerReferenceNumber')">
+                  <svg viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
+                  </svg>
+                </span>
+              </th>
+              <th class="sortable" (click)="onSort('dateSentReceive')">
+                Date Sent/Receive
+                <span class="sort-indicator" [ngClass]="getSortClass('dateSentReceive')">
+                  <svg viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
+                  </svg>
+                </span>
+              </th>
+              <th class="sortable" (click)="onSort('time')">
+                Time
+                <span class="sort-indicator" [ngClass]="getSortClass('time')">
+                  <svg viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
+                  </svg>
+                </span>
+              </th>
+              <th class="sortable" (click)="onSort('status')">
+                Status
+                <span class="sort-indicator" [ngClass]="getSortClass('status')">
+                  <svg viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
+                  </svg>
+                </span>
+              </th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -142,6 +205,50 @@ import { EdiTransaction } from '../../interfaces/edi-transaction.interface';
       font-size: 13px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
+      position: relative;
+    }
+
+    .edi-table th.sortable {
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.2s ease;
+    }
+
+    .edi-table th.sortable:hover {
+      background: #e2e8f0;
+    }
+
+    .sort-indicator {
+      display: inline-flex;
+      align-items: center;
+      margin-left: 6px;
+      opacity: 0.4;
+      transition: all 0.2s ease;
+    }
+
+    .sort-indicator svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .sort-indicator.sort-asc {
+      opacity: 1;
+      color: #2563eb;
+      transform: rotate(0deg);
+    }
+
+    .sort-indicator.sort-desc {
+      opacity: 1;
+      color: #2563eb;
+      transform: rotate(180deg);
+    }
+
+    .sort-indicator.sort-none {
+      opacity: 0.3;
+    }
+
+    .sortable:hover .sort-indicator {
+      opacity: 0.7;
     }
 
     .edi-table td {
@@ -369,13 +476,34 @@ export class EdiTableComponent {
   @Input() transactions: EdiTransaction[] = [];
   @Input() loading: boolean = false;
   
+  @Output() sortChange = new EventEmitter<SortConfig>();
   @Output() viewX12 = new EventEmitter<EdiTransaction>();
   @Output() viewOrder = new EventEmitter<EdiTransaction>();
   @Output() resendTransaction = new EventEmitter<EdiTransaction>();
   @Output() reloadTransaction = new EventEmitter<EdiTransaction>();
 
+  currentSort: SortConfig = { column: 'dateSentReceive', direction: 'desc' };
+
   trackByTransactionId(index: number, transaction: EdiTransaction): string {
     return transaction.id;
+  }
+
+  onSort(column: string) {
+    if (this.currentSort.column === column) {
+      // Toggle direction if same column
+      this.currentSort.direction = this.currentSort.direction === 'asc' ? 'desc' : 'asc';
+    } else {
+      // New column, default to ascending
+      this.currentSort = { column, direction: 'asc' };
+    }
+    this.sortChange.emit(this.currentSort);
+  }
+
+  getSortClass(column: string): string {
+    if (this.currentSort.column !== column) {
+      return 'sort-none';
+    }
+    return this.currentSort.direction === 'asc' ? 'sort-asc' : 'sort-desc';
   }
 
   getStatusDisplay(status: string): string {
