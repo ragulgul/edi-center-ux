@@ -188,8 +188,9 @@ export class EdiService {
           bValue = b.dateSentReceive.getTime();
           break;
         case 'time':
-          aValue = a.time;
-          bValue = b.time;
+          // Convert time to 24-hour format for proper sorting
+          aValue = this.convertTimeTo24Hour(a.time);
+          bValue = this.convertTimeTo24Hour(b.time);
           break;
         case 'status':
           aValue = a.status;
@@ -211,5 +212,19 @@ export class EdiService {
       }
       return 0;
     });
+  }
+
+  private convertTimeTo24Hour(time: string): number {
+    const [timePart, period] = time.split(' ');
+    const [hours, minutes] = timePart.split(':').map(Number);
+    
+    let hour24 = hours;
+    if (period === 'PM' && hours !== 12) {
+      hour24 += 12;
+    } else if (period === 'AM' && hours === 12) {
+      hour24 = 0;
+    }
+    
+    return hour24 * 60 + minutes; // Convert to minutes for easy comparison
   }
 }
