@@ -172,15 +172,14 @@ import { EdiTransaction, SortConfig } from '../../interfaces/edi-transaction.int
       overflow-x: auto;
     }
 
-    .table-wrapper {
-      min-width: 100%;
+      width: 100%;
+      min-width: max-content;
       border-radius: 0 0 12px 12px;
     }
 
     .edi-table {
-      width: max-content;
-      min-width: 100%;
-      border-collapse: collapse;
+      width: 100%;
+      table-layout: fixed;
       font-size: 14px;
     }
 
@@ -193,13 +192,11 @@ import { EdiTransaction, SortConfig } from '../../interfaces/edi-transaction.int
       padding: 16px 8px;
       text-align: left;
       font-weight: 600;
-      color: #374151;
-      white-space: nowrap;
       font-size: 13px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       position: relative;
-      min-width: 120px;
+      white-space: nowrap;
     }
 
     .edi-table th.sortable {
@@ -248,7 +245,6 @@ import { EdiTransaction, SortConfig } from '../../interfaces/edi-transaction.int
     .edi-table td {
       padding: 16px 8px;
       border-bottom: 1px solid #f1f5f9;
-      color: #1e293b;
       vertical-align: middle;
       white-space: nowrap;
     }
