@@ -7,7 +7,6 @@ export interface EdiTransaction {
   gsaId: string;
   customerReferenceNumber: string;
   dateSentReceive: Date;
-  time: string;
   acknowledgement: string;
   status: 'success' | 'pending' | 'error' | 'processing';
   orderId?: string;

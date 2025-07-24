@@ -16,8 +16,7 @@ export class EdiService {
       ediIsaId: '000017612',
       gsaId: '1974',
       customerReferenceNumber: '000257147',
-      dateSentReceive: new Date('2025-07-24'),
-      time: '01:46 AM',
+      dateSentReceive: new Date('2025-07-24T01:46:00'),
       acknowledgement: 'WINLAND_997_20250724014607.OUT',
       status: 'success',
       orderId: 'ORD-001',
@@ -31,8 +30,7 @@ export class EdiService {
       ediIsaId: '000017613',
       gsaId: '1975',
       customerReferenceNumber: '000275756',
-      dateSentReceive: new Date('2025-07-24'),
-      time: '01:46 AM',
+      dateSentReceive: new Date('2025-07-24T01:46:00'),
       acknowledgement: 'WINLAND_997_20250724014614.OUT',
       status: 'success',
       orderId: 'ORD-002',
@@ -46,8 +44,7 @@ export class EdiService {
       ediIsaId: '000017614',
       gsaId: '1976',
       customerReferenceNumber: '000257149',
-      dateSentReceive: new Date('2025-07-24'),
-      time: '02:01 AM',
+      dateSentReceive: new Date('2025-07-24T02:01:00'),
       acknowledgement: 'WINLAND_997_20250724020107.OUT',
       status: 'pending',
       orderId: 'ORD-003',
@@ -61,8 +58,7 @@ export class EdiService {
       ediIsaId: '000017615',
       gsaId: '1977',
       customerReferenceNumber: '000257144',
-      dateSentReceive: new Date('2025-07-23'),
-      time: '02:00 AM',
+      dateSentReceive: new Date('2025-07-23T02:00:00'),
       acknowledgement: 'WINLAND_997_20250724020057.OUT',
       status: 'error',
       orderId: 'ORD-004',
@@ -76,8 +72,7 @@ export class EdiService {
       ediIsaId: '000017616',
       gsaId: '1978',
       customerReferenceNumber: '000257587',
-      dateSentReceive: new Date('2025-07-23'),
-      time: '01:46 AM',
+      dateSentReceive: new Date('2025-07-23T01:46:00'),
       acknowledgement: 'WINLAND_997_20250724014600.OUT',
       status: 'processing',
       orderId: 'ORD-005',
@@ -187,11 +182,6 @@ export class EdiService {
           aValue = a.dateSentReceive.getTime();
           bValue = b.dateSentReceive.getTime();
           break;
-        case 'time':
-          // Convert time to 24-hour format for proper sorting
-          aValue = this.convertTimeTo24Hour(a.time);
-          bValue = this.convertTimeTo24Hour(b.time);
-          break;
         case 'status':
           aValue = a.status;
           bValue = b.status;
@@ -212,19 +202,5 @@ export class EdiService {
       }
       return 0;
     });
-  }
-
-  private convertTimeTo24Hour(time: string): number {
-    const [timePart, period] = time.split(' ');
-    const [hours, minutes] = timePart.split(':').map(Number);
-    
-    let hour24 = hours;
-    if (period === 'PM' && hours !== 12) {
-      hour24 += 12;
-    } else if (period === 'AM' && hours === 12) {
-      hour24 = 0;
-    }
-    
-    return hour24 * 60 + minutes; // Convert to minutes for easy comparison
   }
 }

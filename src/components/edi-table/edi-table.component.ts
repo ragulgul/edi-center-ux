@@ -61,16 +61,8 @@ import { EdiTransaction, SortConfig } from '../../interfaces/edi-transaction.int
                 </span>
               </th>
               <th class="sortable" (click)="onSort('dateSentReceive')">
-                Date Sent/Receive
+                Date/Time
                 <span class="sort-indicator" [ngClass]="getSortClass('dateSentReceive')">
-                  <svg viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
-                  </svg>
-                </span>
-              </th>
-              <th class="sortable" (click)="onSort('time')">
-                Time
-                <span class="sort-indicator" [ngClass]="getSortClass('time')">
                   <svg viewBox="0 0 20 20" fill="currentColor">
                     <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
                   </svg>
@@ -95,8 +87,7 @@ import { EdiTransaction, SortConfig } from '../../interfaces/edi-transaction.int
               <td class="edi-id">{{ transaction.ediIsaId }}</td>
               <td class="gsa-id">{{ transaction.gsaId }}</td>
               <td class="reference-number">{{ transaction.customerReferenceNumber }}</td>
-              <td class="date">{{ transaction.dateSentReceive | date:'MM/dd/yyyy' }}</td>
-              <td class="time">{{ transaction.time }}</td>
+              <td class="datetime">{{ transaction.dateSentReceive | date:'MM/dd/yyyy HH:mm' }}</td>
               <td class="status">
                 <span 
                   class="status-badge"
@@ -152,7 +143,7 @@ import { EdiTransaction, SortConfig } from '../../interfaces/edi-transaction.int
             </tr>
             
             <tr *ngIf="transactions.length === 0" class="no-data-row">
-              <td colspan="10" class="no-data">
+              <td colspan="9" class="no-data">
                 <div class="no-data-content">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <circle cx="11" cy="11" r="8"/>
@@ -178,15 +169,17 @@ import { EdiTransaction, SortConfig } from '../../interfaces/edi-transaction.int
   styles: [`
     .table-container {
       background: white;
+      overflow-x: auto;
     }
 
     .table-wrapper {
-      overflow-x: auto;
+      min-width: 100%;
       border-radius: 0 0 12px 12px;
     }
 
     .edi-table {
-      width: 100%;
+      width: max-content;
+      min-width: 100%;
       border-collapse: collapse;
       font-size: 14px;
     }
@@ -197,7 +190,7 @@ import { EdiTransaction, SortConfig } from '../../interfaces/edi-transaction.int
     }
 
     .edi-table th {
-      padding: 16px 12px;
+      padding: 16px 8px;
       text-align: left;
       font-weight: 600;
       color: #374151;
@@ -206,6 +199,7 @@ import { EdiTransaction, SortConfig } from '../../interfaces/edi-transaction.int
       text-transform: uppercase;
       letter-spacing: 0.05em;
       position: relative;
+      min-width: 120px;
     }
 
     .edi-table th.sortable {
@@ -252,10 +246,11 @@ import { EdiTransaction, SortConfig } from '../../interfaces/edi-transaction.int
     }
 
     .edi-table td {
-      padding: 16px 12px;
+      padding: 16px 8px;
       border-bottom: 1px solid #f1f5f9;
       color: #1e293b;
       vertical-align: middle;
+      white-space: nowrap;
     }
 
     .table-row {
@@ -287,6 +282,12 @@ import { EdiTransaction, SortConfig } from '../../interfaces/edi-transaction.int
       padding: 4px 8px;
       border-radius: 4px;
       display: inline-block;
+    }
+
+    .datetime {
+      font-weight: 500;
+      color: #374151;
+      min-width: 140px;
     }
 
     .status-badge {
@@ -322,6 +323,7 @@ import { EdiTransaction, SortConfig } from '../../interfaces/edi-transaction.int
       display: flex;
       gap: 6px;
       flex-wrap: wrap;
+      min-width: 200px;
     }
 
     .action-btn {
@@ -457,7 +459,11 @@ import { EdiTransaction, SortConfig } from '../../interfaces/edi-transaction.int
     @media (max-width: 768px) {
       .edi-table th,
       .edi-table td {
-        padding: 12px 8px;
+        padding: 12px 6px;
+      }
+
+      .edi-table th {
+        min-width: 100px;
       }
 
       .action-btn {
