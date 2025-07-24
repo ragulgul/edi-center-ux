@@ -19,7 +19,6 @@ export class EdiService {
       dateSentReceive: new Date('2025-07-24T01:46:00'),
       acknowledgement: 'WINLAND_997_20250724014607.OUT',
       status: 'success',
-      orderId: 'ORD-001',
       x12Content: 'ISA*00*          *00*          *ZZ*SENDER_ID      *ZZ*RECEIVER_ID    *250724*0146*U*00401*000017612*0*P*>~'
     },
     {
@@ -33,7 +32,6 @@ export class EdiService {
       dateSentReceive: new Date('2025-07-24T01:46:00'),
       acknowledgement: 'WINLAND_997_20250724014614.OUT',
       status: 'success',
-      orderId: 'ORD-002',
       x12Content: 'ISA*00*          *00*          *ZZ*SENDER_ID      *ZZ*RECEIVER_ID    *250724*0146*U*00401*000017613*0*P*>~'
     },
     {
@@ -47,7 +45,6 @@ export class EdiService {
       dateSentReceive: new Date('2025-07-24T02:01:00'),
       acknowledgement: 'WINLAND_997_20250724020107.OUT',
       status: 'pending',
-      orderId: 'ORD-003',
       x12Content: 'ISA*00*          *00*          *ZZ*SENDER_ID      *ZZ*RECEIVER_ID    *250724*0201*U*00401*000017614*0*P*>~'
     },
     {
@@ -61,7 +58,6 @@ export class EdiService {
       dateSentReceive: new Date('2025-07-23T02:00:00'),
       acknowledgement: 'WINLAND_997_20250724020057.OUT',
       status: 'error',
-      orderId: 'ORD-004',
       x12Content: 'ISA*00*          *00*          *ZZ*SENDER_ID      *ZZ*RECEIVER_ID    *250723*0200*U*00401*000017615*0*P*>~'
     },
     {
@@ -75,7 +71,6 @@ export class EdiService {
       dateSentReceive: new Date('2025-07-23T01:46:00'),
       acknowledgement: 'WINLAND_997_20250724014600.OUT',
       status: 'processing',
-      orderId: 'ORD-005',
       x12Content: 'ISA*00*          *00*          *ZZ*SENDER_ID      *ZZ*RECEIVER_ID    *250723*0146*U*00401*000017616*0*P*>~'
     }
   ];
@@ -177,10 +172,6 @@ export class EdiService {
         case 'customerReferenceNumber':
           aValue = a.customerReferenceNumber;
           bValue = b.customerReferenceNumber;
-          break;
-        case 'dateSentReceive':
-          aValue = a.dateSentReceive.getTime();
-          bValue = b.dateSentReceive.getTime();
           break;
         case 'status':
           aValue = a.status;

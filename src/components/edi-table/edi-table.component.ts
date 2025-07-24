@@ -87,7 +87,6 @@ import { EdiTransaction, SortConfig } from '../../interfaces/edi-transaction.int
               <td class="edi-id">{{ transaction.ediIsaId }}</td>
               <td class="gsa-id">{{ transaction.gsaId }}</td>
               <td class="reference-number">{{ transaction.customerReferenceNumber }}</td>
-              <td class="datetime">{{ transaction.dateSentReceive | date:'MM/dd/yyyy HH:mm' }}</td>
               <td class="status">
                 <span 
                   class="status-badge"
