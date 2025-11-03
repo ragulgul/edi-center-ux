@@ -215,13 +215,17 @@ export class EdiService {
   });
 
   getTransactions(filters: EdiFilters, sortConfig?: SortConfig): Observable<EdiTransaction[]> {
+    console.log('EdiService.getTransactions called with filters:', filters);
     return of(this.mockTransactions).pipe(
       delay(300),
       map(transactions => {
+        console.log('Total mock transactions:', transactions.length);
         let filtered = this.filterTransactions(transactions, filters);
+        console.log('Filtered transactions:', filtered.length);
         if (sortConfig) {
           filtered = this.sortTransactions(filtered, sortConfig);
         }
+        console.log('Final transactions to return:', filtered.length);
         return filtered;
       })
     );
@@ -248,6 +252,7 @@ export class EdiService {
   }
 
   private filterTransactions(transactions: EdiTransaction[], filters: EdiFilters): EdiTransaction[] {
+    console.log('Filtering transactions with:', filters);
     return transactions.filter(transaction => {
       const matchesSearch = !filters.searchText || 
         transaction.customerReferenceNumber.toLowerCase().includes(filters.searchText.toLowerCase()) ||
@@ -268,8 +273,21 @@ export class EdiService {
       const matchesToDate = !filters.toDate || 
         transaction.dateSentReceive <= new Date(filters.toDate);
 
-      return matchesSearch && matchesTradingPartner && matchesStatus && 
+      const matches = matchesSearch && matchesTradingPartner && matchesStatus && 
              matchesDocumentType && matchesFromDate && matchesToDate;
+      
+      if (!matches) {
+        console.log('Transaction filtered out:', transaction.customerReferenceNumber, {
+          matchesSearch,
+          matchesTradingPartner,
+          matchesStatus,
+          matchesDocumentType,
+          matchesFromDate,
+          matchesToDate
+        });
+      }
+      
+      return matches;
     });
   }
 

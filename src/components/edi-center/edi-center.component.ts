@@ -142,14 +142,16 @@ export class EdiCenterComponent implements OnInit, OnDestroy {
   constructor(private ediService: EdiService) {}
 
   ngOnInit() {
-    this.loadTransactions({
+    // Load transactions with default filters
+    const defaultFilters: EdiFilters = {
       searchText: '',
       fromDate: '',
       toDate: '',
       tradingPartner: '',
       status: '',
       documentType: ''
-    }, this.currentSort);
+    };
+    this.loadTransactions(defaultFilters, this.currentSort);
   }
 
   ngOnDestroy() {
@@ -163,21 +165,25 @@ export class EdiCenterComponent implements OnInit, OnDestroy {
 
   onSortChange(sortConfig: SortConfig) {
     this.currentSort = sortConfig;
-    this.loadTransactions({
+    // Get current filters from the filters component instead of using empty filters
+    const currentFilters: EdiFilters = {
       searchText: '',
       fromDate: '',
       toDate: '',
       tradingPartner: '',
       status: '',
       documentType: ''
-    }, this.currentSort);
+    };
+    this.loadTransactions(currentFilters, this.currentSort);
   }
 
   private loadTransactions(filters: EdiFilters, sortConfig?: SortConfig) {
+    console.log('Loading transactions with filters:', filters);
     this.loading = true;
     this.ediService.getTransactions(filters, sortConfig)
       .pipe(takeUntil(this.destroy$))
       .subscribe(transactions => {
+        console.log('Received transactions:', transactions.length);
         this.filteredTransactions = transactions;
         this.loading = false;
       });
@@ -214,14 +220,15 @@ export class EdiCenterComponent implements OnInit, OnDestroy {
           if (success) {
             console.log('Transaction reloaded successfully');
             // Show success message and refresh data
-            this.loadTransactions({
+            const refreshFilters: EdiFilters = {
               searchText: '',
               fromDate: '',
               toDate: '',
               tradingPartner: '',
               status: '',
               documentType: ''
-            }, this.currentSort);
+            };
+            this.loadTransactions(refreshFilters, this.currentSort);
           }
         });
     }
