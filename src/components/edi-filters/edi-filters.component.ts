@@ -332,10 +332,9 @@ export class EdiFiltersComponent implements OnInit {
 
   private setDefaultDateRange() {
     const today = new Date();
-    const threeMonthsAgo = new Date();
-    threeMonthsAgo.setMonth(today.getMonth() - 3);
+    const januaryFirst = new Date(2025, 0, 1); // January 1, 2025
     
-    this.filters.fromDate = threeMonthsAgo.toISOString().split('T')[0];
+    this.filters.fromDate = januaryFirst.toISOString().split('T')[0];
     this.filters.toDate = today.toISOString().split('T')[0];
   }
 
